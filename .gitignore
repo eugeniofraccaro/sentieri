@@ -1,0 +1,16 @@
+# File RAW delle fotocamere
+*.CR2
+*.CR3
+*.NEF
+*.ARW
+*.dng
+
+# Cartella con gli originali non compressi
+originali/
+
+# File di sistema
+.DS_Store
+Thumbs.db
+
+# Impostazioni locali di Claude Code
+.claude/

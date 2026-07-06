@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diario di quota — i nostri sentieri</title>
+<meta name="description" content="Album fotografico delle nostre gite in montagna: foto, panorami e video del drone, gita per gita.">
+<!--
+  ============================================================
+  DIARIO DI QUOTA — album ricordo delle gite in montagna
+  ------------------------------------------------------------
+  • File unico e autoconsistente: nessun font, script o CSS
+    caricato da internet. Funziona offline con doppio click.
+  • Le foto NON sono dentro questo file: vengono lette dalla
+    cartella /media accanto al file. Gli originali restano tuoi.
+  • Per aggiungere una gita: cerca "ELENCO DELLE GITE" più in
+    basso, nello script in fondo alla pagina, e segui gli esempi.
+  ============================================================
+-->
+<style>
+/* ------------------------------------------------------------
+   1. TOKEN — palette "carta topografica e segnavia"
+   ------------------------------------------------------------ */
+:root{
+  --carta:        #F3F4EE;   /* fondo: carta con una punta di verde */
+  --carta-scura:  #E8EAE0;   /* pannelli, didascalie                */
+  --abete:        #23372B;   /* inchiostro: verde abete scuro       */
+  --roccia:       #6B7166;   /* testo secondario, grigio roccia     */
+  --segnavia:     #BC3A2B;   /* rosso dei segnavia sui sentieri     */
+  --linea:        #B9BFAC;   /* tratteggio del sentiero, bordi      */
+  --notte:        #131A15;   /* fondo del lightbox                  */
+
+  --serif: "Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --mono:  ui-monospace,"Cascadia Mono","SF Mono",Consolas,"Liberation Mono",Menlo,monospace;
+
+  --misura: 66ch;            /* larghezza massima del testo         */
+  --raggio: 6px;
+}
+
+*{ box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  background:var(--carta);
+  color:var(--abete);
+  font-family:var(--serif);
+  font-size:1.0625rem;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+
+img,video{ max-width:100%; }
+
+/* Focus da tastiera sempre visibile, nel rosso segnavia */
+:focus-visible{
+  outline:3px solid var(--segnavia);
+  outline-offset:3px;
+  border-radius:2px;
+}
+
+::selection{ background:var(--segnavia); color:#fff; }
+
+.salta{
+  position:absolute; left:-999px; top:8px;
+  background:var(--abete); color:#fff;
+  padding:.5rem 1rem; z-index:100; font-family:var(--mono); font-size:.85rem;
+}
+.salta:focus{ left:8px; }
+
+.mono{
+  font-family:var(--mono);
+  font-size:.78rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--roccia);
+}
+
+/* ------------------------------------------------------------
+   2. INTESTAZIONE con profilo di cresta
+   ------------------------------------------------------------ */
+.intro{
+  max-width:960px;
+  margin:0 auto;
+  padding:clamp(2.5rem,7vw,5rem) 1.25rem 0;
+}
+.intro h1{
+  font-size:clamp(2.4rem,6vw,4.2rem);
+  font-weight:600;
+  line-height:1.05;
+  letter-spacing:-.015em;
+  margin:.6rem 0 1rem;
+  max-width:14ch;
+}
+.intro .sottotitolo{
+  max-width:52ch;
+  margin:0;
+  color:var(--roccia);
+  font-size:1.1rem;
+}
+.cresta{
+  display:block;
+  width:100%;
+  height:auto;
+  margin-top:clamp(1.5rem,4vw,3rem);
+  color:var(--abete);
+}
+.cresta .vetta{ fill:var(--segnavia); }
+
+/* ------------------------------------------------------------
+   3. IL SENTIERO — elenco delle gite
+   ------------------------------------------------------------ */
+main{
+  max-width:960px;
+  margin:0 auto;
+  padding:clamp(1.5rem,4vw,3rem) 1.25rem 4rem;
+}
+
+.sentiero{
+  position:relative;
+  padding-left:52px;
+}
+/* la traccia tratteggiata che collega le gite, come su una mappa */
+.sentiero::before{
+  content:"";
+  position:absolute;
+  left:15px; top:6px; bottom:6px;
+  border-left:2px dashed var(--linea);
+}
+
+.gita{
+  position:relative;
+  padding:0 0 clamp(3rem,7vw,4.5rem);
+}
+
+/* la bandierina segnavia rosso-bianco-rosso, dipinta un po' storta */
+.segnavia{
+  position:absolute;
+  left:-49px; top:.45em;
+  width:30px; height:21px;
+  background:linear-gradient(180deg,
+    var(--segnavia) 0 33.4%,
+    #fdfdfb 33.4% 66.7%,
+    var(--segnavia) 66.7% 100%);
+  border:1px solid rgba(35,55,43,.35);
+  border-radius:2px;
+  transform:rotate(-4deg);
+  box-shadow:1px 2px 0 rgba(35,55,43,.18);
+}
+.gita:nth-child(even) .segnavia{ transform:rotate(3deg); }
+
+.gita h2{
+  font-size:clamp(1.5rem,3.4vw,2.1rem);
+  font-weight:600;
+  line-height:1.15;
+  margin:0 0 .35rem;
+}
+.gita .meta{ margin:0 0 .9rem; }
+.gita .meta .sep{ color:var(--linea); padding:0 .45em; }
+.gita .racconto{
+  max-width:var(--misura);
+  margin:0 0 1.4rem;
+  color:#3d4a41;
+}
+
+/* ------------------------------------------------------------
+   4. GRIGLIA FOTO — pensata per i paesaggi
+   ------------------------------------------------------------ */
+.griglia{
+  display:grid;
+  gap:14px;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+}
+.foto{ margin:0; }
+.foto .apri{
+  display:block; width:100%;
+  padding:0; border:0; background:none;
+  cursor:zoom-in;
+  border-radius:var(--raggio);
+}
+.foto img{
+  display:block; width:100%;
+  aspect-ratio:3/2;
+  object-fit:cover;
+  border-radius:var(--raggio);
+  background:var(--carta-scura);
+}
+/* i panorami occupano tutta la riga, formato lungo */
+.foto.pano{ grid-column:1/-1; }
+.foto.pano img{ aspect-ratio:16/5; }
+
+.foto figcaption,
+.clip figcaption{
+  font-size:.9rem;
+  font-style:italic;
+  color:var(--roccia);
+  padding:.35rem .1rem 0;
+}
+
+/* segnaposto quando un file non viene trovato in /media */
+.segnaposto{
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:.4rem;
+  aspect-ratio:3/2;
+  border:2px dashed var(--linea);
+  border-radius:var(--raggio);
+  color:var(--roccia);
+  font-family:var(--mono);
+  font-size:.75rem;
+  text-align:center;
+  padding:1rem;
+}
+.pano .segnaposto{ aspect-ratio:16/5; }
+
+/* video: locale o incorporato, sempre a piena riga */
+.clip{ grid-column:1/-1; margin:0; }
+.clip video{
+  display:block; width:100%;
+  border-radius:var(--raggio);
+  background:#000;
+}
+.clip .embed{
+  position:relative;
+  aspect-ratio:16/9;
+  border-radius:var(--raggio);
+  overflow:hidden;
+  background:var(--notte);
+}
+.clip .embed iframe{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  border:0;
+}
+.clip .nota-rete{
+  display:block;
+  font-family:var(--mono); font-style:normal;
+  font-size:.7rem; letter-spacing:.05em;
+  color:var(--roccia);
+  margin-top:.25rem;
+}
+
+/* ------------------------------------------------------------
+   5. LIGHTBOX a schermo intero
+   ------------------------------------------------------------ */
+.lightbox{
+  position:fixed; inset:0;
+  z-index:50;
+  display:flex; flex-direction:column;
+  background:rgba(19,26,21,.97);
+  color:#e9ece6;
+}
+.lightbox[hidden]{ display:none; }
+
+.lb-scena{
+  flex:1; min-height:0;
+  display:flex; align-items:center; justify-content:center;
+  overflow:auto;
+  padding:14px;
+}
+.lb-scena img{
+  max-width:100%;
+  max-height:calc(100vh - 130px);
+  object-fit:contain;
+  border-radius:4px;
+}
+/* modalità panorama: piena altezza, si scorre in orizzontale */
+.lightbox.pano .lb-scena{ justify-content:flex-start; }
+.lightbox.pano .lb-scena img{
+  max-width:none;
+  width:auto;
+  height:calc(100vh - 150px);
+}
+
+.lb-barra{
+  display:flex; align-items:baseline; gap:1rem;
+  padding:.6rem 1rem 1rem;
+}
+.lb-didascalia{ font-style:italic; font-size:.95rem; margin:0; flex:1; }
+.lb-contatore{ font-family:var(--mono); font-size:.75rem; letter-spacing:.08em; color:#aab3a9; white-space:nowrap; }
+
+.lb-bottone{
+  position:absolute;
+  display:flex; align-items:center; justify-content:center;
+  width:46px; height:46px;
+  border:1px solid rgba(233,236,230,.35);
+  border-radius:50%;
+  background:rgba(19,26,21,.55);
+  color:#e9ece6;
+  font-size:1.35rem; line-height:1;
+  cursor:pointer;
+}
+.lb-bottone:hover{ background:rgba(233,236,230,.16); }
+.lb-bottone[hidden]{ display:none; }
+.lightbox :focus-visible{ outline-color:#fff; }
+.lb-chiudi{ top:14px; right:14px; }
+.lb-prec{ left:14px; top:50%; transform:translateY(-50%); }
+.lb-succ{ right:14px; top:50%; transform:translateY(-50%); }
+
+/* ------------------------------------------------------------
+   6. PIÈ DI PAGINA
+   ------------------------------------------------------------ */
+footer{
+  border-top:2px dashed var(--linea);
+  max-width:960px;
+  margin:0 auto;
+  padding:1.6rem 1.25rem 3rem;
+  color:var(--roccia);
+  font-size:.95rem;
+}
+footer p{ margin:.3rem 0; max-width:var(--misura); }
+
+/* ------------------------------------------------------------
+   7. MOVIMENTO — rispettoso di prefers-reduced-motion
+   ------------------------------------------------------------ */
+.gita{ opacity:1; transform:none; }
+@media (prefers-reduced-motion: no-preference){
+  .gita.da-rivelare{
+    opacity:0;
+    transform:translateY(14px);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .gita.visibile{ opacity:1; transform:none; }
+}
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+}
+
+/* ------------------------------------------------------------
+   8. MOBILE
+   ------------------------------------------------------------ */
+@media (max-width:640px){
+  .sentiero{ padding-left:40px; }
+  .sentiero::before{ left:11px; }
+  .segnavia{ left:-40px; width:26px; height:18px; }
+  .griglia{ grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
+  .lb-bottone{ width:40px; height:40px; }
+  .lb-prec{ left:8px; } .lb-succ{ right:8px; }
+}
+</style>
+</head>
+<body>
+
+<a class="salta" href="#gite">Salta all'elenco delle gite</a>
+
+<header class="intro">
+  <p class="mono" id="periodo">Diario di quota</p>
+  <h1 id="titolo-sito">I nostri sentieri</h1>
+  <p class="sottotitolo" id="sottotitolo-sito">
+    Le montagne che abbiamo camminato insieme: foto, panorami e qualche volo
+    del drone, una gita alla volta, dalla più recente.
+  </p>
+  <!-- profilo di cresta disegnato a linea; il puntino rosso è la vetta raggiunta -->
+  <svg class="cresta" viewBox="0 0 960 120" role="img" aria-label="Profilo stilizzato di una cresta montuosa">
+    <path d="M0 108 L90 70 L150 88 L235 34 L300 74 L370 52 L455 14 L530 68 L610 44 L690 84 L780 58 L870 92 L960 76"
+          fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle class="vetta" cx="455" cy="14" r="5"/>
+  </svg>
+</header>
+
+<main id="gite">
+  <div class="sentiero" id="sentiero"><!-- le gite vengono generate dallo script --></div>
+</main>
+
+<footer>
+  <p class="mono">Regola di casa</p>
+  <p>Questo sito è solo la vetrina: gli originali delle foto vivono altrove,
+     al sicuro, in tre copie. Qui c'è quello che vale la pena raccontare.</p>
+  <p class="mono" id="firma"></p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto a schermo intero" hidden>
+  <div class="lb-scena" id="lb-scena">
+    <img id="lb-img" src="" alt="">
+  </div>
+  <div class="lb-barra">
+    <p class="lb-didascalia" id="lb-didascalia"></p>
+    <span class="lb-contatore" id="lb-contatore"></span>
+  </div>
+  <button class="lb-bottone lb-chiudi" id="lb-chiudi" aria-label="Chiudi (Esc)">&#215;</button>
+  <button class="lb-bottone lb-prec"  id="lb-prec"  aria-label="Foto precedente (freccia sinistra)">&#8249;</button>
+  <button class="lb-bottone lb-succ"  id="lb-succ"  aria-label="Foto successiva (freccia destra)">&#8250;</button>
+</div>
+
+<script>
+/* ==============================================================
+   IMPOSTAZIONI GENERALI — cambia questi testi come preferisci
+   ============================================================== */
+const CONFIG = {
+  firma: "Aggiornato a mano, una gita alla volta.",
+};
+
+/* ==============================================================
+   ELENCO DELLE GITE  ←←← è QUI che aggiungi le tue foto
+   --------------------------------------------------------------
+   Ogni gita è un oggetto { ... }. L'ordine in questa lista è
+   l'ordine sulla pagina: tieni la più recente in cima.
+
+   Campi di ogni gita:
+     titolo       il nome della gita
+     luogo        zona / gruppo montuoso (testo libero)
+     data         testo libero, es. "14 settembre 2025"
+     quota        opzionale, es. "2.454 m" (compare accanto alla data)
+     racconto     due o tre frasi: chi c'era, com'è andata
+     media        la lista di foto e video, nell'ordine di racconto
+
+   Tipi di elemento in "media":
+     FOTO        { src:"media/nomefile.jpg", alt:"descrizione per chi
+                   non vede l'immagine", didascalia:"testo sotto la foto" }
+     PANORAMA    come una foto, ma con  pano:true  → occupa tutta la
+                   riga e nel lightbox si scorre in orizzontale
+     VIDEO LOCALE{ tipo:"video", src:"media/volo.mp4",
+                   poster:"media/volo-copertina.jpg", didascalia:"..." }
+     VIDEO EMBED { tipo:"embed", src:"https://player.vimeo.com/video/ID",
+                   didascalia:"..." }   ← richiede connessione internet
+
+   Finché un file citato qui non esiste in /media, la pagina
+   mostra un segnaposto con il nome del file atteso.
+   ============================================================== */
+const VIAGGI = [
+  {
+    titolo: "Monte Sief al tramonto",
+    luogo:  "Dolomiti, gruppo Col di Lana",
+    data:   "13 giugno 2026",
+    quota:  "2.424 m",
+    racconto: "Salita serale, con la luce che si allungava sui prati del Pralongià. " +
+              "In cresta il sentiero corre tra le trincee della Grande Guerra, " +
+              "e in vetta siamo rimasti fino al tramonto.",
+    media: [
+      { src:"media/Monte Sief/_DSF5174.JPG",
+        alt:"Due escursionisti su un crinale erboso, con la Marmolada innevata sullo sfondo",
+        didascalia:"In cammino sui prati, con la Marmolada a fare da sfondo." },
+      { src:"media/Monte Sief/_DSF5182.JPG",
+        alt:"Escursionisti risalgono la cresta rocciosa verso la cima",
+        didascalia:"L'ultimo tratto di cresta, tra rocce e cielo pulito." },
+      { src:"media/Monte Sief/_DSF5186.JPG",
+        alt:"Pareti rocciose a picco sopra i pendii erbosi",
+        didascalia:"Le pareti del Settsass viste dalla cresta." },
+      { src:"media/Monte Sief/_DSF5202.JPG",
+        alt:"Dettaglio della croce di vetta in ferro arrugginito con filo spinato della Grande Guerra",
+        didascalia:"La croce di vetta, con il filo spinato di cent'anni fa." },
+      { src:"media/Monte Sief/_DSF5216.JPG",
+        alt:"Silhouette in controluce accanto alla croce di vetta",
+        didascalia:"In vetta, controluce." },
+      { src:"media/Monte Sief/_DSF5253.JPG",
+        alt:"Creste e cime dolomitiche nella luce calda del tramonto, con la Civetta all'orizzonte",
+        didascalia:"L'ultima luce sulle creste, prima di scendere." },
+    ],
+  },
+];
+
+/* ==============================================================
+   Da qui in giù è il motore della pagina: non serve toccarlo.
+   ============================================================== */
+(function(){
+  "use strict";
+
+  const sentiero = document.getElementById("sentiero");
+  const preferisceMenoMovimento =
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* --- costruzione delle gite --------------------------------- */
+  const fotoPerGita = []; // per la navigazione nel lightbox
+
+  VIAGGI.forEach(function(viaggio, iGita){
+    const foto = [];
+    fotoPerGita.push(foto);
+
+    const sezione = document.createElement("section");
+    sezione.className = "gita" + (preferisceMenoMovimento ? "" : " da-rivelare");
+    sezione.setAttribute("aria-label", viaggio.titolo);
+
+    const flag = document.createElement("span");
+    flag.className = "segnavia";
+    flag.setAttribute("aria-hidden", "true");
+    sezione.appendChild(flag);
+
+    const h2 = document.createElement("h2");
+    h2.textContent = viaggio.titolo;
+    sezione.appendChild(h2);
+
+    const meta = document.createElement("p");
+    meta.className = "meta mono";
+    const parti = [viaggio.luogo, viaggio.data, viaggio.quota].filter(Boolean);
+    parti.forEach(function(testo, i){
+      if (i > 0){
+        const sep = document.createElement("span");
+        sep.className = "sep";
+        sep.textContent = "·";
+        meta.appendChild(sep);
+      }
+      meta.appendChild(document.createTextNode(testo));
+    });
+    sezione.appendChild(meta);
+
+    if (viaggio.racconto){
+      const p = document.createElement("p");
+      p.className = "racconto";
+      p.textContent = viaggio.racconto;
+      sezione.appendChild(p);
+    }
+
+    const griglia = document.createElement("div");
+    griglia.className = "griglia";
+
+    (viaggio.media || []).forEach(function(el){
+      if (el.tipo === "video")      griglia.appendChild(creaVideoLocale(el));
+      else if (el.tipo === "embed") griglia.appendChild(creaEmbed(el));
+      else                          griglia.appendChild(creaFoto(el, iGita, foto));
+    });
+
+    sezione.appendChild(griglia);
+    sentiero.appendChild(sezione);
+  });
+
+  function creaFoto(el, iGita, foto){
+    const iFoto = foto.length;
+    foto.push(el);
+
+    const figura = document.createElement("figure");
+    figura.className = "foto" + (el.pano ? " pano" : "");
+
+    const bottone = document.createElement("button");
+    bottone.type = "button";
+    bottone.className = "apri";
+    bottone.setAttribute("aria-label",
+      "Apri a schermo intero: " + (el.alt || "foto"));
+
+    const img = document.createElement("img");
+    img.src = el.src;
+    img.alt = el.alt || "";
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.addEventListener("error", function(){
+      const segnaposto = document.createElement("span");
+      segnaposto.className = "segnaposto";
+      segnaposto.textContent = "manca il file: " + el.src;
+      bottone.replaceChild(segnaposto, img);
+      bottone.disabled = true;
+      bottone.style.cursor = "default";
+    });
+
+    bottone.appendChild(img);
+    bottone.addEventListener("click", function(){
+      apriLightbox(iGita, iFoto, bottone);
+    });
+    figura.appendChild(bottone);
+
+    if (el.didascalia){
+      const cap = document.createElement("figcaption");
+      cap.textContent = el.didascalia;
+      figura.appendChild(cap);
+    }
+    return figura;
+  }
+
+  function creaVideoLocale(el){
+    const figura = document.createElement("figure");
+    figura.className = "clip";
+
+    const video = document.createElement("video");
+    video.controls = true;
+    video.preload = "metadata";
+    video.playsInline = true;
+    if (el.poster) video.poster = el.poster;
+
+    const sorgente = document.createElement("source");
+    sorgente.src = el.src;
+    video.appendChild(sorgente);
+    video.appendChild(document.createTextNode(
+      "Il tuo browser non riesce a riprodurre questo video (" + el.src + ")."));
+    figura.appendChild(video);
+
+    if (el.didascalia){
+      const cap = document.createElement("figcaption");
+      cap.textContent = el.didascalia;
+      figura.appendChild(cap);
+    }
+    return figura;
+  }
+
+  function creaEmbed(el){
+    const figura = document.createElement("figure");
+    figura.className = "clip";
+
+    const scatola = document.createElement("div");
+    scatola.className = "embed";
+    const iframe = document.createElement("iframe");
+    iframe.src = el.src;
+    iframe.loading = "lazy";
+    iframe.allow = "fullscreen; picture-in-picture";
+    iframe.title = el.didascalia || "Video incorporato";
+    scatola.appendChild(iframe);
+    figura.appendChild(scatola);
+
+    const cap = document.createElement("figcaption");
+    cap.textContent = el.didascalia || "";
+    const nota = document.createElement("span");
+    nota.className = "nota-rete";
+    nota.textContent = "Video in streaming: richiede la connessione a internet.";
+    cap.appendChild(nota);
+    figura.appendChild(cap);
+    return figura;
+  }
+
+  /* --- comparsa delle gite allo scorrimento ------------------- */
+  if (!preferisceMenoMovimento && "IntersectionObserver" in window){
+    const osservatore = new IntersectionObserver(function(voci){
+      voci.forEach(function(voce){
+        if (voce.isIntersecting){
+          voce.target.classList.add("visibile");
+          osservatore.unobserve(voce.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    document.querySelectorAll(".gita.da-rivelare")
+      .forEach(function(s){ osservatore.observe(s); });
+  } else {
+    document.querySelectorAll(".gita")
+      .forEach(function(s){ s.classList.remove("da-rivelare"); });
+  }
+
+  /* --- lightbox ------------------------------------------------ */
+  const lightbox   = document.getElementById("lightbox");
+  const lbImg      = document.getElementById("lb-img");
+  const lbDid      = document.getElementById("lb-didascalia");
+  const lbCont     = document.getElementById("lb-contatore");
+  const btnChiudi  = document.getElementById("lb-chiudi");
+  const btnPrec    = document.getElementById("lb-prec");
+  const btnSucc    = document.getElementById("lb-succ");
+
+  let gitaAperta = 0, fotoAperta = 0, origine = null;
+
+  function apriLightbox(iGita, iFoto, bottoneOrigine){
+    gitaAperta = iGita;
+    origine = bottoneOrigine;
+    mostraFoto(iFoto);
+    lightbox.hidden = false;
+    document.body.style.overflow = "hidden";
+    btnChiudi.focus();
+  }
+
+  function chiudiLightbox(){
+    lightbox.hidden = true;
+    document.body.style.overflow = "";
+    lbImg.src = "";
+    if (origine) origine.focus();
+  }
+
+  function mostraFoto(iFoto){
+    const foto = fotoPerGita[gitaAperta];
+    fotoAperta = (iFoto + foto.length) % foto.length;
+    const el = foto[fotoAperta];
+    lbImg.src = el.src;
+    lbImg.alt = el.alt || "";
+    lbDid.textContent = el.didascalia || "";
+    lbCont.textContent = (fotoAperta + 1) + " / " + foto.length;
+    lightbox.classList.toggle("pano", !!el.pano);
+    const unaSola = foto.length < 2;
+    btnPrec.hidden = unaSola;
+    btnSucc.hidden = unaSola;
+  }
+
+  btnChiudi.addEventListener("click", chiudiLightbox);
+  btnPrec.addEventListener("click", function(){ mostraFoto(fotoAperta - 1); });
+  btnSucc.addEventListener("click", function(){ mostraFoto(fotoAperta + 1); });
+  lightbox.addEventListener("click", function(e){
+    if (e.target === lightbox || e.target.id === "lb-scena") chiudiLightbox();
+  });
+
+  document.addEventListener("keydown", function(e){
+    if (lightbox.hidden) return;
+    if (e.key === "Escape"){ chiudiLightbox(); return; }
+    if (e.key === "ArrowLeft"){ mostraFoto(fotoAperta - 1); return; }
+    if (e.key === "ArrowRight"){ mostraFoto(fotoAperta + 1); return; }
+    if (e.key === "Tab"){
+      // il fuoco resta dentro il lightbox
+      const attivi = [btnChiudi, btnPrec, btnSucc].filter(function(b){ return !b.hidden; });
+      const primo = attivi[0], ultimo = attivi[attivi.length - 1];
+      if (e.shiftKey && document.activeElement === primo){
+        e.preventDefault(); ultimo.focus();
+      } else if (!e.shiftKey && document.activeElement === ultimo){
+        e.preventDefault(); primo.focus();
+      }
+    }
+  });
+
+  /* --- rifiniture ---------------------------------------------- */
+  document.getElementById("firma").textContent = CONFIG.firma;
+})();
+</script>
+</body>
+</html>
