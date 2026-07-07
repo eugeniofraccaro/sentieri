@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="it">
+<!-- VARIANTE A — SPEDIZIONE -->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,326 +19,125 @@
   ============================================================
 -->
 <style>
-/* ------------------------------------------------------------
-   1. TOKEN — palette "carta topografica e segnavia"
-   ------------------------------------------------------------ */
+
+/* ===== VARIANTE A — "SPEDIZIONE": reportage da rivista ===== */
 :root{
-  --carta:        #F3F4EE;   /* fondo: carta con una punta di verde */
-  --carta-scura:  #E8EAE0;   /* pannelli, didascalie                */
-  --abete:        #23372B;   /* inchiostro: verde abete scuro       */
-  --roccia:       #6B7166;   /* testo secondario, grigio roccia     */
-  --segnavia:     #BC3A2B;   /* rosso dei segnavia sui sentieri     */
-  --linea:        #B9BFAC;   /* tratteggio del sentiero, bordi      */
-  --notte:        #131A15;   /* fondo del lightbox                  */
+  --carta:#FFFFFF; --inchiostro:#15171B; --grigio:#585F66;
+  --accento:#D9581E;              /* arancio da attrezzatura alpinistica */
+  --filo:#E4E5E7;
+  --sans:system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+  --mono:ui-monospace,"Cascadia Mono","SF Mono",Consolas,Menlo,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--carta);color:var(--inchiostro);
+  font-family:var(--serif);font-size:1.0625rem;line-height:1.65;}
+img,video{max-width:100%;}
+:focus-visible{outline:3px solid var(--accento);outline-offset:3px;}
+::selection{background:var(--accento);color:#fff;}
+.salta{position:absolute;left:-999px;top:8px;background:var(--inchiostro);color:#fff;
+  padding:.5rem 1rem;z-index:100;font-family:var(--mono);font-size:.85rem;}
+.salta:focus{left:8px;}
+.mono{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--grigio);}
 
-  --serif: "Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
-  --mono:  ui-monospace,"Cascadia Mono","SF Mono",Consolas,"Liberation Mono",Menlo,monospace;
+/* copertina: lastra scura da rivista di reportage */
+.intro{background:var(--inchiostro);color:#fff;max-width:none;
+  padding:clamp(3rem,8vw,5.5rem) clamp(1.25rem,7vw,5rem) clamp(1.6rem,4vw,3rem);}
+.intro .mono{color:var(--accento);}
+.intro h1{font-family:var(--sans);font-weight:900;text-transform:uppercase;
+  font-size:clamp(2.5rem,7vw,4.8rem);line-height:1;letter-spacing:-.01em;
+  margin:.5rem 0 1rem;max-width:16ch;}
+.intro .sottotitolo{font-style:italic;color:#C9CCD1;max-width:52ch;margin:0;font-size:1.1rem;}
+.cresta{display:block;width:100%;height:auto;margin-top:clamp(1.5rem,4vw,2.6rem);
+  color:rgba(255,255,255,.8);}
+.cresta .vetta{fill:var(--accento);}
 
-  --misura: 66ch;            /* larghezza massima del testo         */
-  --raggio: 6px;
-}
+main{max-width:1020px;margin:0 auto;padding:clamp(2rem,5vw,3.5rem) 1.25rem 4rem;}
+.sentiero{padding-left:0;}
+.sentiero::before{content:none;}
 
-*{ box-sizing:border-box; }
+.gita{position:relative;border-top:4px solid var(--inchiostro);
+  padding:1.3rem 0 clamp(3rem,7vw,4.5rem);}
+/* il segnavia diventa la tacca arancione d'apertura articolo */
+.segnavia{position:static;display:block;width:38px;height:8px;
+  background:var(--accento);border:0;border-radius:0;transform:none;
+  box-shadow:none;margin:0 0 .8rem;}
+.gita h2{font-family:var(--sans);font-weight:800;letter-spacing:-.02em;
+  font-size:clamp(1.7rem,4vw,2.6rem);line-height:1.1;margin:0 0 .4rem;}
+.gita .meta{margin:0 0 1rem;}
+.gita .meta .sep{color:var(--filo);padding:0 .45em;}
+.gita .racconto{max-width:64ch;margin:0 0 1.5rem;color:#33383E;}
+/* capolettera editoriale */
+.gita .racconto::first-letter{font-family:var(--sans);font-weight:900;
+  font-size:3.1em;float:left;line-height:.82;padding:.04em .1em 0 0;
+  color:var(--accento);}
 
-html{ scroll-behavior:smooth; }
+.griglia{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));}
+.foto{margin:0;}
+.foto .apri{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;}
+.foto img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;background:#F1F2F3;}
+.foto.pano{grid-column:1/-1;}
+.foto.pano img{aspect-ratio:16/5;}
+.foto figcaption,.clip figcaption{font-family:var(--sans);font-style:normal;
+  font-size:.82rem;color:var(--grigio);padding:.4rem .1rem 0;}
+.segnaposto{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.4rem;aspect-ratio:3/2;border:2px dashed var(--filo);color:var(--grigio);
+  font-family:var(--mono);font-size:.75rem;text-align:center;padding:1rem;}
+.pano .segnaposto{aspect-ratio:16/5;}
+.clip{grid-column:1/-1;margin:0;}
+.clip video{display:block;width:100%;background:#000;}
+.clip .embed{position:relative;aspect-ratio:16/9;overflow:hidden;background:#15171B;}
+.clip .embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.clip .nota-rete{display:block;font-family:var(--mono);font-style:normal;
+  font-size:.7rem;letter-spacing:.05em;color:var(--grigio);margin-top:.25rem;}
 
-body{
-  margin:0;
-  background:var(--carta);
-  color:var(--abete);
-  font-family:var(--serif);
-  font-size:1.0625rem;
-  line-height:1.65;
-  -webkit-font-smoothing:antialiased;
-}
-
-img,video{ max-width:100%; }
-
-/* Focus da tastiera sempre visibile, nel rosso segnavia */
-:focus-visible{
-  outline:3px solid var(--segnavia);
-  outline-offset:3px;
-  border-radius:2px;
-}
-
-::selection{ background:var(--segnavia); color:#fff; }
-
-.salta{
-  position:absolute; left:-999px; top:8px;
-  background:var(--abete); color:#fff;
-  padding:.5rem 1rem; z-index:100; font-family:var(--mono); font-size:.85rem;
-}
-.salta:focus{ left:8px; }
-
-.mono{
-  font-family:var(--mono);
-  font-size:.78rem;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  color:var(--roccia);
-}
-
-/* ------------------------------------------------------------
-   2. INTESTAZIONE con profilo di cresta
-   ------------------------------------------------------------ */
-.intro{
-  max-width:960px;
-  margin:0 auto;
-  padding:clamp(2.5rem,7vw,5rem) 1.25rem 0;
-}
-.intro h1{
-  font-size:clamp(2.4rem,6vw,4.2rem);
-  font-weight:600;
-  line-height:1.05;
-  letter-spacing:-.015em;
-  margin:.6rem 0 1rem;
-  max-width:14ch;
-}
-.intro .sottotitolo{
-  max-width:52ch;
-  margin:0;
-  color:var(--roccia);
-  font-size:1.1rem;
-}
-.cresta{
-  display:block;
-  width:100%;
-  height:auto;
-  margin-top:clamp(1.5rem,4vw,3rem);
-  color:var(--abete);
-}
-.cresta .vetta{ fill:var(--segnavia); }
-
-/* ------------------------------------------------------------
-   3. IL SENTIERO — elenco delle gite
-   ------------------------------------------------------------ */
-main{
-  max-width:960px;
-  margin:0 auto;
-  padding:clamp(1.5rem,4vw,3rem) 1.25rem 4rem;
-}
-
-.sentiero{
-  position:relative;
-  padding-left:52px;
-}
-/* la traccia tratteggiata che collega le gite, come su una mappa */
-.sentiero::before{
-  content:"";
-  position:absolute;
-  left:15px; top:6px; bottom:6px;
-  border-left:2px dashed var(--linea);
-}
-
-.gita{
-  position:relative;
-  padding:0 0 clamp(3rem,7vw,4.5rem);
-}
-
-/* la bandierina segnavia rosso-bianco-rosso, dipinta un po' storta */
-.segnavia{
-  position:absolute;
-  left:-49px; top:.45em;
-  width:30px; height:21px;
-  background:linear-gradient(180deg,
-    var(--segnavia) 0 33.4%,
-    #fdfdfb 33.4% 66.7%,
-    var(--segnavia) 66.7% 100%);
-  border:1px solid rgba(35,55,43,.35);
-  border-radius:2px;
-  transform:rotate(-4deg);
-  box-shadow:1px 2px 0 rgba(35,55,43,.18);
-}
-.gita:nth-child(even) .segnavia{ transform:rotate(3deg); }
-
-.gita h2{
-  font-size:clamp(1.5rem,3.4vw,2.1rem);
-  font-weight:600;
-  line-height:1.15;
-  margin:0 0 .35rem;
-}
-.gita .meta{ margin:0 0 .9rem; }
-.gita .meta .sep{ color:var(--linea); padding:0 .45em; }
-.gita .racconto{
-  max-width:var(--misura);
-  margin:0 0 1.4rem;
-  color:#3d4a41;
-}
-
-/* ------------------------------------------------------------
-   4. GRIGLIA FOTO — pensata per i paesaggi
-   ------------------------------------------------------------ */
-.griglia{
-  display:grid;
-  gap:14px;
-  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-}
-.foto{ margin:0; }
-.foto .apri{
-  display:block; width:100%;
-  padding:0; border:0; background:none;
-  cursor:zoom-in;
-  border-radius:var(--raggio);
-}
-.foto img{
-  display:block; width:100%;
-  aspect-ratio:3/2;
-  object-fit:cover;
-  border-radius:var(--raggio);
-  background:var(--carta-scura);
-}
-/* i panorami occupano tutta la riga, formato lungo */
-.foto.pano{ grid-column:1/-1; }
-.foto.pano img{ aspect-ratio:16/5; }
-
-.foto figcaption,
-.clip figcaption{
-  font-size:.9rem;
-  font-style:italic;
-  color:var(--roccia);
-  padding:.35rem .1rem 0;
-}
-
-/* segnaposto quando un file non viene trovato in /media */
-.segnaposto{
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:.4rem;
-  aspect-ratio:3/2;
-  border:2px dashed var(--linea);
-  border-radius:var(--raggio);
-  color:var(--roccia);
-  font-family:var(--mono);
-  font-size:.75rem;
-  text-align:center;
-  padding:1rem;
-}
-.pano .segnaposto{ aspect-ratio:16/5; }
-
-/* video: locale o incorporato, sempre a piena riga */
-.clip{ grid-column:1/-1; margin:0; }
-.clip video{
-  display:block; width:100%;
-  border-radius:var(--raggio);
-  background:#000;
-}
-.clip .embed{
-  position:relative;
-  aspect-ratio:16/9;
-  border-radius:var(--raggio);
-  overflow:hidden;
-  background:var(--notte);
-}
-.clip .embed iframe{
-  position:absolute; inset:0;
-  width:100%; height:100%;
-  border:0;
-}
-.clip .nota-rete{
-  display:block;
-  font-family:var(--mono); font-style:normal;
-  font-size:.7rem; letter-spacing:.05em;
-  color:var(--roccia);
-  margin-top:.25rem;
-}
-
-/* ------------------------------------------------------------
-   5. LIGHTBOX a schermo intero
-   ------------------------------------------------------------ */
-.lightbox{
-  position:fixed; inset:0;
-  z-index:50;
-  display:flex; flex-direction:column;
-  background:rgba(19,26,21,.97);
-  color:#e9ece6;
-}
-.lightbox[hidden]{ display:none; }
-
-.lb-scena{
-  flex:1; min-height:0;
-  display:flex; align-items:center; justify-content:center;
-  overflow:auto;
-  padding:14px;
-}
-.lb-scena img{
-  max-width:100%;
-  max-height:calc(100vh - 130px);
-  object-fit:contain;
-  border-radius:4px;
-}
-/* modalità panorama: piena altezza, si scorre in orizzontale */
-.lightbox.pano .lb-scena{ justify-content:flex-start; }
-.lightbox.pano .lb-scena img{
-  max-width:none;
-  width:auto;
-  height:calc(100vh - 150px);
-}
-
-.lb-barra{
-  display:flex; align-items:baseline; gap:1rem;
-  padding:.6rem 1rem 1rem;
-}
-.lb-didascalia{ font-style:italic; font-size:.95rem; margin:0; flex:1; }
-.lb-contatore{ font-family:var(--mono); font-size:.75rem; letter-spacing:.08em; color:#aab3a9; white-space:nowrap; }
-
-.lb-bottone{
-  position:absolute;
-  display:flex; align-items:center; justify-content:center;
-  width:46px; height:46px;
-  border:1px solid rgba(233,236,230,.35);
-  border-radius:50%;
-  background:rgba(19,26,21,.55);
-  color:#e9ece6;
-  font-size:1.35rem; line-height:1;
-  cursor:pointer;
-}
-.lb-bottone:hover{ background:rgba(233,236,230,.16); }
-.lb-bottone[hidden]{ display:none; }
-.lightbox :focus-visible{ outline-color:#fff; }
-.lb-chiudi{ top:14px; right:14px; }
-.lb-prec{ left:14px; top:50%; transform:translateY(-50%); }
-.lb-succ{ right:14px; top:50%; transform:translateY(-50%); }
-
-/* ------------------------------------------------------------
-   6. PIÈ DI PAGINA
-   ------------------------------------------------------------ */
-footer{
-  border-top:2px dashed var(--linea);
-  max-width:960px;
-  margin:0 auto;
-  padding:1.6rem 1.25rem 3rem;
-  color:var(--roccia);
-  font-size:.95rem;
-}
-footer p{ margin:.3rem 0; max-width:var(--misura); }
-
-/* ------------------------------------------------------------
-   7. MOVIMENTO — rispettoso di prefers-reduced-motion
-   ------------------------------------------------------------ */
-.gita{ opacity:1; transform:none; }
-@media (prefers-reduced-motion: no-preference){
-  .gita.da-rivelare{
-    opacity:0;
-    transform:translateY(14px);
-    transition:opacity .5s ease, transform .5s ease;
-  }
-  .gita.visibile{ opacity:1; transform:none; }
-}
-@media (prefers-reduced-motion: reduce){
-  html{ scroll-behavior:auto; }
-}
-
-/* ------------------------------------------------------------
-   8. MOBILE
-   ------------------------------------------------------------ */
+footer{border-top:4px solid var(--inchiostro);max-width:1020px;margin:0 auto;
+  padding:1.6rem 1.25rem 3rem;color:var(--grigio);font-size:.95rem;}
+footer p{margin:.3rem 0;max-width:64ch;}
 @media (max-width:640px){
-  .sentiero{ padding-left:40px; }
-  .sentiero::before{ left:11px; }
-  .segnavia{ left:-40px; width:26px; height:18px; }
-  .griglia{ grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
-  .lb-bottone{ width:40px; height:40px; }
-  .lb-prec{ left:8px; } .lb-succ{ right:8px; }
+  .gita .racconto::first-letter{font-size:2.6em;}
 }
+
+/* --- LIGHTBOX ------------------------------------------------ */
+.lightbox{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;
+  background:rgba(13,15,16,.97);color:#e9ece6;}
+.lightbox[hidden]{display:none;}
+.lb-scena{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+  overflow:auto;padding:14px;}
+.lb-scena img{max-width:100%;max-height:calc(100vh - 130px);object-fit:contain;border-radius:2px;}
+.lightbox.pano .lb-scena{justify-content:flex-start;}
+.lightbox.pano .lb-scena img{max-width:none;width:auto;height:calc(100vh - 150px);}
+.lb-barra{display:flex;align-items:baseline;gap:1rem;padding:.6rem 1rem 1rem;}
+.lb-didascalia{font-style:italic;font-size:.95rem;margin:0;flex:1;}
+.lb-contatore{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;color:#aab3a9;white-space:nowrap;}
+.lb-bottone{position:absolute;display:flex;align-items:center;justify-content:center;
+  width:46px;height:46px;border:1px solid rgba(233,236,230,.35);border-radius:50%;
+  background:rgba(13,15,16,.55);color:#e9ece6;font-size:1.35rem;line-height:1;cursor:pointer;}
+.lb-bottone:hover{background:rgba(233,236,230,.16);}
+.lb-bottone[hidden]{display:none;}
+.lightbox :focus-visible{outline-color:#fff;}
+.lb-chiudi{top:14px;right:14px;}
+.lb-prec{left:14px;top:50%;transform:translateY(-50%);}
+.lb-succ{right:14px;top:50%;transform:translateY(-50%);}
+
+/* --- MOVIMENTO ----------------------------------------------- */
+.gita{opacity:1;transform:none;}
+@media (prefers-reduced-motion: no-preference){
+  .gita.da-rivelare{opacity:0;transform:translateY(14px);
+    transition:opacity .5s ease,transform .5s ease;}
+  .gita.visibile{opacity:1;transform:none;}
+}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+
+/* --- MOBILE --------------------------------------------------- */
+@media (max-width:640px){
+  .griglia{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;}
+  .lb-bottone{width:40px;height:40px;}
+  .lb-prec{left:8px;} .lb-succ{right:8px;}
+}
+
 </style>
 </head>
 <body>
