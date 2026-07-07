@@ -4,8 +4,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Diario di quota — i nostri sentieri</title>
-<meta name="description" content="Album fotografico delle nostre gite in montagna: foto, panorami e video del drone, gita per gita.">
+<title>Esperienze di Montagna - Eugenio Fraccaro</title>
+<meta name="description" content="Una raccolta delle esperienze di montagna fatte nel tempo, per maggiori informazioni contattare: eugenio.fraccaro@gmail.com">
 <!--
   ============================================================
   DIARIO DI QUOTA — album ricordo delle gite in montagna
@@ -53,6 +53,21 @@ img,video{max-width:100%;}
 .cresta{display:block;width:100%;height:auto;margin-top:clamp(1.5rem,4vw,2.6rem);
   color:rgba(255,255,255,.8);}
 .cresta .vetta{fill:var(--accento);}
+
+/* indice dei luoghi in copertina */
+.indice{margin-top:clamp(1.6rem,4vw,2.4rem);}
+.indice .mono{color:var(--accento);margin:0 0 .65rem;}
+.indice ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.55rem .6rem;}
+.indice a{display:inline-flex;align-items:baseline;gap:.6em;
+  font-family:var(--sans);font-size:.92rem;font-weight:650;color:#fff;
+  text-decoration:none;border:1px solid rgba(255,255,255,.3);
+  border-radius:999px;padding:.45em .95em;transition:border-color .15s,background .15s;}
+.indice a::before{content:"";width:7px;height:7px;border-radius:50%;
+  background:var(--accento);align-self:center;flex:none;}
+.indice a .dettaglio{font-family:var(--mono);font-size:.68rem;
+  letter-spacing:.07em;color:#C9CCD1;text-transform:uppercase;}
+.indice a:hover{border-color:var(--accento);background:rgba(217,88,30,.14);}
+.gita{scroll-margin-top:1rem;}
 
 main{max-width:1020px;margin:0 auto;padding:clamp(2rem,5vw,3.5rem) 1.25rem 4rem;}
 .sentiero{padding-left:0;}
@@ -151,6 +166,11 @@ footer p{margin:.3rem 0;max-width:64ch;}
     Le montagne che abbiamo camminato insieme: foto, panorami e qualche volo
     del drone, una gita alla volta, dalla più recente.
   </p>
+  <!-- indice dei luoghi: si riempie da solo leggendo l'elenco VIAGGI -->
+  <nav class="indice" aria-label="Indice delle gite">
+    <p class="mono" id="indice-conto">I luoghi</p>
+    <ul id="indice-lista"></ul>
+  </nav>
   <!-- profilo di cresta disegnato a linea; il puntino rosso è la vetta raggiunta -->
   <svg class="cresta" viewBox="0 0 960 120" role="img" aria-label="Profilo stilizzato di una cresta montuosa">
     <path d="M0 108 L90 70 L150 88 L235 34 L300 74 L370 52 L455 14 L530 68 L610 44 L690 84 L780 58 L870 92 L960 76"
@@ -165,8 +185,7 @@ footer p{margin:.3rem 0;max-width:64ch;}
 
 <footer>
   <p class="mono">Regola di casa</p>
-  <p>Questo sito è solo la vetrina: gli originali delle foto vivono altrove,
-     al sicuro, in tre copie. Qui c'è quello che vale la pena raccontare.</p>
+  <p>Vivere la vita fino all'ultimo respiro.</p>
   <p class="mono" id="firma"></p>
 </footer>
 
@@ -189,7 +208,7 @@ footer p{margin:.3rem 0;max-width:64ch;}
    IMPOSTAZIONI GENERALI — cambia questi testi come preferisci
    ============================================================== */
 const CONFIG = {
-  firma: "Aggiornato a mano, una gita alla volta.",
+  firma: "Eugenio Fraccaro",
 };
 
 /* ==============================================================
@@ -261,6 +280,15 @@ const VIAGGI = [
   const preferisceMenoMovimento =
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // ancora univoca di una gita, es. "gita-1-monte-sief-al-tramonto"
+  function ancoraDellaGita(i, viaggio){
+    const pulito = String(viaggio.titolo || "")
+      .toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")   // via gli accenti
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return "gita-" + (i + 1) + (pulito ? "-" + pulito : "");
+  }
+
   /* --- costruzione delle gite --------------------------------- */
   const fotoPerGita = []; // per la navigazione nel lightbox
 
@@ -271,6 +299,7 @@ const VIAGGI = [
     const sezione = document.createElement("section");
     sezione.className = "gita" + (preferisceMenoMovimento ? "" : " da-rivelare");
     sezione.setAttribute("aria-label", viaggio.titolo);
+    sezione.id = ancoraDellaGita(iGita, viaggio);
 
     const flag = document.createElement("span");
     flag.className = "segnavia";
@@ -403,6 +432,31 @@ const VIAGGI = [
     cap.appendChild(nota);
     figura.appendChild(cap);
     return figura;
+  }
+
+  /* --- indice dei luoghi in copertina -------------------------- */
+  const listaIndice = document.getElementById("indice-lista");
+  const contoIndice = document.getElementById("indice-conto");
+  if (listaIndice){
+    VIAGGI.forEach(function(viaggio, i){
+      const voce = document.createElement("li");
+      const collegamento = document.createElement("a");
+      collegamento.href = "#" + ancoraDellaGita(i, viaggio);
+      collegamento.appendChild(document.createTextNode(viaggio.titolo));
+      const dettaglio = [viaggio.quota, viaggio.data].filter(Boolean)[0];
+      if (dettaglio){
+        const extra = document.createElement("span");
+        extra.className = "dettaglio";
+        extra.textContent = dettaglio;
+        collegamento.appendChild(extra);
+      }
+      voce.appendChild(collegamento);
+      listaIndice.appendChild(voce);
+    });
+    if (contoIndice){
+      contoIndice.textContent =
+        "I luoghi — " + VIAGGI.length + (VIAGGI.length === 1 ? " gita" : " gite");
+    }
   }
 
   /* --- comparsa delle gite allo scorrimento ------------------- */
